@@ -1,0 +1,53 @@
+---
+title: "lab 5"
+author: "divyank_19bce1354"
+date: "11/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+# Logistic Regression
+# Read data file
+rm(list=ls())
+mydata <- read.csv("admission.csv")
+str(mydata)
+head(mydata)
+summary(mydata)
+hist(mydata$admit,col="blue")
+mydata$admit <- as.factor(mydata$admit)
+```
+```{r}
+#install.packages("caret")
+library(caret)
+train_ind = createDataPartition(mydata$admit,p=0.80,list=F)
+train_ds=mydata[train_ind,]
+test_ds=mydata[-train_ind,]
+my_model=glm(admit~.,data=train_ds,family="binomial")
+summary(my_model)
+```
+```{r}
+#null deviance = prediction using only intercept excluding all other factors on
+#320 dof = n-k-1 = 321-0-1 = 320
+#residual deviance - prediction by considering all factors on 
+# 315 dof = n-k-1 = 321-5-1 = 315
+pred_train = predict(my_model, train_ds,type="response")
+pred_train
+
+pred_train=ifelse(pred_train>0.5,1,0)
+tab1 <- table(Predicted = pred_train, Actual = train_ds$admit)
+tab1
+```
+```{r}
+1-sum(diag(tab1))/sum(tab1) #misclassification error
+pred_test <-predict(my_model, test_ds,type="response")
+pred_test
+```
+```{r}
+pred_test=ifelse(pred_test>0.5,1,0)
+tab2 <- table(Predicted = pred_test, Actual = test_ds$admit)
+tab2
+1-sum(diag(tab2))/sum(tab2)
+```

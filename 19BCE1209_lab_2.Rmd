@@ -1,0 +1,43 @@
+---
+title: "Lab 2"
+author: "Gautam Sanjay Wadhwani 19BCE1209"
+date: "2/1/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(readxl)
+```
+# Excavation Depth and Archaeology
+```{r}
+ExcavationDepth <- read_xlsx("ExcavationDepth.xlsx")
+ExcavationDepth
+Site_I <- ExcavationDepth$X1
+Site_II <- ExcavationDepth$X2
+Site_III <- ExcavationDepth$X3
+Site_IV <- ExcavationDepth$X4
+combined_groups <- data.frame(cbind(Site_I, Site_II, Site_III, Site_IV))
+stacked_group <- stack(combined_groups)
+stacked_group
+anova_result <- aov(values~ind, data = stacked_group)
+summary(anova_result)
+```
+# Business Startup Costs
+```{r}
+BusinessStartups <- read_xlsx("BusinessStartups.xlsx")
+BusinessStartups
+Pizza <- BusinessStartups$X1
+Donut <- BusinessStartups$X2
+Shoe <- BusinessStartups$X3
+Gift <- BusinessStartups$X4
+Pet <- BusinessStartups$X5
+combined_groups <- data.frame(cbind(Pizza, Donut, Shoe, Gift, Pet))
+stacked_group <- stack(combined_groups)
+anova_result <- aov(values~ind, data = stacked_group)
+summary(anova_result)
+```

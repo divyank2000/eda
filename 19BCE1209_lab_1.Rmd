@@ -1,0 +1,75 @@
+---
+title: "Lab 1"
+author: "Gautam Sanjay Wadhwani 19BCE1209"
+date: "1/24/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+rm(list=ls())
+library("dplyr")
+library("tidyverse")
+library("ggplot2")
+```
+
+# For dataset mtcars
+```{r}
+data <- mtcars
+data <- sample_n(data, 15)
+data
+```
+
+```{r}
+ggplot(data, aes(x=wt, y=mpg)) + geom_point()
+cor.test(data$wt, data$mpg)   
+```
+
+## Simple Linear Regression
+```{r}
+slr = lm(mpg~wt, data) 
+summary(slr)
+plot(slr$resid)  # Residual plot
+qqnorm(slr$resid)   #Q-Q Plot
+```
+
+## Multiple linear regression
+```{r}
+mlr = lm(mpg~wt+gear, data) 
+summary(mlr)
+plot(mlr$resid)  # Residual plot
+qqnorm(mlr$resid)   #Q-Q Plot
+```
+
+
+# For dataset CreditWorthiness
+```{r}
+data <- read.csv("CreditWorthiness.csv")
+data <- sample_n(data, 15)
+data
+```
+
+
+```{r}
+ggplot(data, aes(x=Camt, y=Cdur)) + geom_point()
+cor.test(data$Camt, data$Cdur)   
+```
+
+## Simple Linear Regression
+```{r}
+slr = lm(Cdur~Camt, data) 
+summary(slr)
+plot(slr$resid)  # Residual plot
+qqnorm(slr$resid)   #Q-Q Plot
+```
+
+## Multiple linear regression
+```{r}
+mlr = lm(Cdur~Camt+InRate, data) 
+summary(mlr)
+plot(mlr$resid)  # Residual plot
+qqnorm(mlr$resid)   #Q-Q Plot
+```

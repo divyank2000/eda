@@ -1,0 +1,64 @@
+---
+title: "lab 4"
+author: "divyank_19bce1354"
+date: "12/04/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+rm(list=ls())
+library(forecast)
+library(tseries)
+data = read.csv("Tractor-Sales.csv")
+class(data)
+```
+```{r}
+data = ts(data$Number.of.Tractor.Sold,start = c(2003,1),frequency = 12)
+class(data)
+```
+```{r}
+plot(data, xlab='Years', ylab = 'Tractor Sales')
+adf.test(data)
+```
+```{r}
+plot(diff(data),ylab='Differenced Tractor Sales')
+```
+```{r}
+ld<-log10(data)
+plot(ld,ylab='Log (Tractor Sales)')
+```
+```{r}
+dld<-diff(ld)
+plot(dld,ylab='Differenced Log (Tractor Sales)')
+```
+```{r}
+adf.test(dld)
+```
+```{r}
+par(mfrow = c(1,2)) # to analyze multiple graphs in a single window
+```
+```{r}
+acf(ts(dld),main='ACF Tractor Sales')
+pacf(ts(dld),main='PACF Tractor Sales')
+```
+```{r}
+ARIMAfit = auto.arima(dld,ic="aic",trace=TRUE)
+forecast(ARIMAfit,3)
+summary(ARIMAfit)
+par(mfrow = c(1,1))
+fc=forecast(data,level=c(95),h=3*12)
+plot(fc)
+ftsales=predict(ARIMAfit,60)
+summary(ftsales)
+attributes(fc)
+
+```
